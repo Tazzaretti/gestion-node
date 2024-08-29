@@ -4,6 +4,7 @@ const controller = require("./controller");
 
 
 router.get('/', (req,res, next) => {
+    req.session.auth = true;
     if (req.session.auth)
         return res.redirect('/inicio')
     else

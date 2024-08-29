@@ -64,8 +64,8 @@ app.use(async function(req, res, next){
 });
 
 // RUTAS
-
-
+app.use(require("./modules/index/routes"));
+app.use(require("./modules/clientes/routes"));
 
 // Conecciones a redis y bd
 (async function () {
