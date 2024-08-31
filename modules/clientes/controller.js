@@ -1,11 +1,14 @@
 const mClientes = require("./model");
+const mProvincias = require("../provincias/model");
+
+
 
 exports.getLista = async (req, res) => {
-    const clientes = await mClientes.getAll();
     //const {id} = req.session.user;
+    const provincias = await mProvincias.getAllProvincias();
     res.render("clientes/views/lista", {
         pagename: "Clientes",
-        clientes,
+        provincias
         //unica: id,
     });
 };

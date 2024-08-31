@@ -7,6 +7,7 @@
       integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N"
       crossorigin="anonymous"
     />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gestion</title>
@@ -62,8 +63,9 @@
           </ul>
         </div>
       </nav>
+      {% block content %} {% endblock %}
     </div>
-    {% block content %} {% endblock %}
+    
 
     <script
       src="https://code.jquery.com/jquery-3.7.1.min.js"

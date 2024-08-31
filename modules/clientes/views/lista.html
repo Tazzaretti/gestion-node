@@ -1,29 +1,50 @@
-{% extends "../../template.html" %}
-
-{% block styles %}
-{% endblock %}
-
-{% block content %}
+{% extends "../../template.html" %} {% block styles %} {% endblock %} {% block
+content %}
 <div class="row">
-    <div class="col-md-12 d-flex">
-        <h4 class="m-4"><i class="fa fa-users"></i>{{ pagename }}</h4>
+  <div class="col-md-12 d-flex">
+    <h4 class="m-4"><i class="fa fa-users"></i> {{ pagename }}</h4>
+    <div class="ml-lg-auto d-flex flex-col flex-lg-row justify-content-end" style="gap: 1rem;">
+      <div class="form-inline">
+        <label for="filtroProv">Provincia</label>
+        <select id="filtroProv" class="form-control">
+          Seleccione una
+          <option value="t">Todas</option>
+          {% for p in provincias %}
+          <option value="{{ p.id }}">{{ p.nombre }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-inline">
+        <label for="filtroProv">Provincia</label>
+        <select id="filtroProv" class="form-control">
+          Seleccione una
+          <option value="t">Todas</option>
+          {% for p in provincias %}
+          <option value="{{ p.id }}">{{ p.nombre }}</option>
+          {% endfor %}
+        </select>
+      </div>
     </div>
-    <div class="col-md-12">
-        <table class="table">
-            <thead>
-                <th scope="col">Nombre</th>
-                <th scope="col">Razon social</th>
-                <th scope="col">Teléfono</th>
-                <th scope="col">Email</th>
-                <th scope="col">Provincia</th>
-                <th scope="col">Localidad</th>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
+  </div>
+
+  <div class="col-md-12">
+    <table class="table">
+      <thead>
+        <th scope="col">Nombre</th>
+        <th scope="col">Razon social</th>
+        <th scope="col">Teléfono</th>
+        <th scope="col">Email</th>
+        <th scope="col">Provincia</th>
+        <th scope="col">Localidad</th>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
 </div>
-{% endblock %}
+{% endblock %} {% block scripts %}
+<script>
+  let data = [];
 
-{% block scripts %}
-
+  const cargaDatos = async () => {};
+</script>
 {% endblock %}
