@@ -1,12 +1,15 @@
-{% extends "../../template.html" %} {% block styles %} {% endblock %} {% block
-content %}
+{% extends "../../template.html" %} 
+
+{% block styles %} 
+{% endblock %} 
+{% block content %}
 <div class="row">
   <div class="col-md-12 d-flex">
     <h4 class="m-4"><i class="fa fa-users"></i> {{ pagename }}</h4>
     <div class="ml-lg-auto d-flex flex-col flex-lg-row justify-content-end" style="gap: 1rem;">
       <div class="form-inline">
         <label for="filtroProv">Provincia</label>
-        <select id="filtroProv" class="form-control">
+        <select id="filtroProv" class="form-control" onchange="cargaDatos()">
           Seleccione una
           <option value="t">Todas</option>
           {% for p in provincias %}
@@ -15,8 +18,8 @@ content %}
         </select>
       </div>
       <div class="form-inline">
-        <label for="filtroProv">Provincia</label>
-        <select id="filtroProv" class="form-control">
+        <label for="">Provincia</label>
+        <select id="" class="form-control">
           Seleccione una
           <option value="t">Todas</option>
           {% for p in provincias %}
@@ -28,8 +31,9 @@ content %}
   </div>
 
   <div class="col-md-12">
-    <table class="table">
+    <table id="tablaClientes" class="table">
       <thead>
+        <th scope="col">Acciones</th>
         <th scope="col">Nombre</th>
         <th scope="col">Razon social</th>
         <th scope="col">Teléfono</th>
@@ -41,10 +45,96 @@ content %}
     </table>
   </div>
 </div>
-{% endblock %} {% block scripts %}
-<script>
-  let data = [];
 
-  const cargaDatos = async () => {};
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalVer">
+  Launch static backdrop modal
+</button>
+<!--Modal Ver-->
+<div class="modal fade" id="modalVer" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Ver Cliente</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row mt-2">
+          <div class="col-md-6">Nombre</div>
+          <div class="col-md-6">Razón Social</div>
+        </div>
+        <div class="row mt-4">
+          <div class="col-md-6">Telefono</div>
+          <div class="col-md-6">Email</div>
+        </div>
+        <div class="row mt-4">
+          <div class="col-md-6">Provincia</div>
+          <div class="col-md-6">Localidad</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} 
+
+{% block scripts %}
+<script>
+  let clientesMostrar = [];
+  listaClientes = []
+  $(document).ready(() => {
+    cargaDatos();
+  })
+
+  const cargaDatos = async (data = null) => {
+    let provincia = $("#filtroProv").val();
+    let localidad = $("#filtroLoc").val();
+    let activo = null;
+    let clientesMostrar = [];
+
+    $("#preloaderAPP").show();
+    if (data) {
+      clientesMostrar = data;
+    } else {
+      clientesMostrar = await $.ajax({
+        url: "/clientes/lista",
+        type: "POST",
+        data: { activo, provincia, localidad },
+        async: false
+      }).responseJSON;
+      listaClientes = clientesMostrar;
+    };
+    $("#preloaderAPP").hide();
+    
+      let table = $("#tablaClientes tbody");
+      table.html("");
+
+      listaClientes.map((c)=>{
+        table.append(
+          `
+          <tr>
+            <td>
+              <button class="btn btn-round btn-info btn-sm" onClick="Modificar()"><i class="fa fa-eye"></i></button>
+              <button class="btn btn-round btn-warning btn-sm" onClick="Eliminar()"><i class="fa fa-pen"></i></button>
+              <button class="btn btn-round btn-danger btn-sm" onClick="Ver()"><i class="fa fa-trash"></i></button>
+            </td>
+            <td>${c.nombre}</td>
+            <td>${c.razon_social}</td>
+            <td>${c.telefonos}</td>
+            <td>${c.email}</td>
+            <td>${c.provincia}</td>
+            <td>${c.localidad}</td>
+          </tr>
+          `
+        )
+      })
+    
+  };
+
+
 </script>
 {% endblock %}

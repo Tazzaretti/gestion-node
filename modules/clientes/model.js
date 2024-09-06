@@ -1,7 +1,28 @@
 const {queryMYSQL} = require("../../database");
 
-exports.getAll = () => {
-    return queryMYSQL(`SELECT * FROM clientes`)
+exports.getAll = async function ({activo = null, provincia = null, localidad = null} = {}) {
+    params = [];
+    let query = `
+        select c.*, p.nombre as provincia, l.nombre as localidad, l.id_provincia_fk
+        from clientes c
+        left join localidades l on c.id_localidad_fk = l.id 
+        left join provincias p on p.id = l.id_provincia_fk  WHERE 1=1`;
+    
+    if (activo !== "t" && activo !== null) {
+        query += `AND c.activo = ?`
+        params.push(activo)
+    }
+
+    if (provincia && provincia != "t"){
+        query += `AND l.id_provincia_fk = ?`
+        params.push(provincia)
+    }
+
+    if (localidad != null && localidad != "t"){
+        query += `AND c.id_localidad_fk = ?`
+        params.push(localidad)
+    }
+    return await queryMYSQL(query, params);
 };
 
 exports.insert = async (nombre, domicilio, telefonos, email, cuit, id_iva_fk, dni, razon_social, id_localidad_fk) => {
