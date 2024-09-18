@@ -18,13 +18,10 @@
         </select>
       </div>
       <div class="form-inline">
-        <label for="">Provincia</label>
-        <select id="" class="form-control">
+        <label for="">Localidades</label>
+        <select id="filtroLoc" class="form-control">
           Seleccione una
           <option value="t">Todas</option>
-          {% for p in provincias %}
-          <option value="{{ p.id }}">{{ p.nombre }}</option>
-          {% endfor %}
         </select>
       </div>
     </div>
@@ -46,10 +43,6 @@
   </div>
 </div>
 
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalVer">
-  Launch static backdrop modal
-</button>
 <!--Modal Ver-->
 <div class="modal fade" id="modalVer" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -62,16 +55,84 @@
       </div>
       <div class="modal-body">
         <div class="row mt-2">
-          <div class="col-md-6">Nombre</div>
-          <div class="col-md-6">Razón Social</div>
+          <div class="col-md-6">
+            <span class="v">Nombre:</span>
+            <span id="vNombre"></span>
+          </div>
+          <div class="col-md-6">
+            <span class="v">Razon Social:</span>
+            <span id="vRsocial"></span>
+          </div>
         </div>
         <div class="row mt-4">
-          <div class="col-md-6">Telefono</div>
-          <div class="col-md-6">Email</div>
+          <div class="col-md-6">
+            <span class="v">Teléfono:</span>
+            <span id="vTelefono"></span>
+          </div>
+          <div class="col-md-6">
+            <span class="v">Email:</span>
+            <span id="vEmail"></span>
+          </div>
         </div>
         <div class="row mt-4">
-          <div class="col-md-6">Provincia</div>
-          <div class="col-md-6">Localidad</div>
+          <div class="col-md-6">
+            <span class="v">Provincia:</span>
+            <span id="vProvincia"></span>
+          </div>
+          <div class="col-md-6">
+            <span class="v">Localidad:</span>
+            <span id="vLocalidad"></span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!--Modal alta y modificar -->
+<div class="modal fade" id="modalAlta" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalTitle"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row mt-2">
+          <div class="col-md-6">
+            <span class="v">Nombre:</span>
+            <span id="vNombre"></span>
+          </div>
+          <div class="col-md-6">
+            <span class="v">Razon Social:</span>
+            <span id="vRsocial"></span>
+          </div>
+        </div>
+        <div class="row mt-4">
+          <div class="col-md-6">
+            <span class="v">Teléfono:</span>
+            <span id="vTelefono"></span>
+          </div>
+          <div class="col-md-6">
+            <span class="v">Email:</span>
+            <span id="vEmail"></span>
+          </div>
+        </div>
+        <div class="row mt-4">
+          <div class="col-md-6">
+            <span class="v">Provincia:</span>
+            <span id="vProvincia"></span>
+          </div>
+          <div class="col-md-6">
+            <span class="v">Localidad:</span>
+            <span id="vLocalidad"></span>
+          </div>
         </div>
       </div>
       <div class="modal-footer">
@@ -89,6 +150,22 @@
   $(document).ready(() => {
     cargaDatos();
   })
+
+
+  const Ver = async (id) => {
+    $("#preloaderAPP").show();
+    let cliente = await $.getJSON(`/clientes/${id}`);
+    console.log(cliente);
+
+    $("#vNombre").text(`${cliente.nombre}`);
+    $("#vRsocial").text(`${cliente.razon_social}`);
+    $("#vTelefono").text(`${cliente.telefonos}`);
+    $("#vEmail").text(`${cliente.email}`);
+    $("#vLocalidad").text(`${cliente.nombre_localidad}`);
+    $("#vProvincia").text(`${cliente.nombre_provincia}`);
+    $("#preloaderAPP").hide();
+    $("#modalVer").modal("show");
+  }
 
   const cargaDatos = async (data = null) => {
     let provincia = $("#filtroProv").val();
@@ -118,9 +195,9 @@
           `
           <tr>
             <td>
-              <button class="btn btn-round btn-info btn-sm" onClick="Modificar()"><i class="fa fa-eye"></i></button>
+              <button class="btn btn-round btn-info btn-sm" onClick="Ver(${c.id})"><i class="fa fa-eye"></i></button>
               <button class="btn btn-round btn-warning btn-sm" onClick="Eliminar()"><i class="fa fa-pen"></i></button>
-              <button class="btn btn-round btn-danger btn-sm" onClick="Ver()"><i class="fa fa-trash"></i></button>
+              <button class="btn btn-round btn-danger btn-sm" onClick="Modificar()"><i class="fa fa-trash"></i></button>
             </td>
             <td>${c.nombre}</td>
             <td>${c.razon_social}</td>

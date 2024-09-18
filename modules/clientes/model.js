@@ -33,3 +33,13 @@ exports.insert = async (nombre, domicilio, telefonos, email, cuit, id_iva_fk, dn
         ,params
     )
 }
+
+
+exports.getClienteById = async (id) => {
+    return queryMYSQL(`
+        SELECT c.*, l.nombre as nombre_localidad, p.nombre as nombre_provincia
+        FROM clientes c
+        LEFT JOIN localidades l on l.id = c.id_localidad_fk 
+        LEFT JOIN provincias p on l.id_provincia_fk = p.id
+        WHERE c.id = ?`, [id]);
+}

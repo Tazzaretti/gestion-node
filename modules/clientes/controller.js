@@ -17,3 +17,13 @@ exports.getAll = async (req, res) => {
     const clientes = await mClientes.getAll(activo, provincia, localidad);
     res.json(clientes);
 }
+
+exports.getById = async (req, res) => {
+    let id = req.params.id
+    console.log(id)
+
+    let cliente = await mClientes.getClienteById(id);
+    console.log(cliente[0])
+
+    res.json(cliente[0]);
+}
