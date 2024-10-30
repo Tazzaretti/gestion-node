@@ -67,6 +67,8 @@ app.use(async function(req, res, next){
 app.use(require("./modules/index/routes"));
 app.use(require("./modules/clientes/routes"));
 app.use(require("./modules/localidades/routes"));
+app.use(require("./modules/iva/routes"));
+app.use(require("./modules/articulos/routes"));
 
 // Conecciones a redis y bd
 (async function () {

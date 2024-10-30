@@ -25,12 +25,11 @@ exports.getAll = async function ({activo = null, provincia = null, localidad = n
     return await queryMYSQL(query, params);
 };
 
-exports.insert = async (nombre, domicilio, telefonos, email, cuit, id_iva_fk, dni, razon_social, id_localidad_fk) => {
-    let params = [nombre, domicilio, telefonos, email, cuit, id_iva_fk, dni, razon_social, id_localidad_fk]
-    return queryMYSQL(`
-        INSERT INTO clientes(nombre, domicilio, telefonos, email, cuit, id_iva_fk, dni, razon_social, id_localidad_fk, activo, alta)
-        VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, 1, NOW())`
-        ,params
+exports.insert = async ( cliente ) => {
+    return await queryMYSQL(`
+        INSERT INTO clientes(nombre, razon_social, email, cuit, telefonos, dni, id_iva_fk, id_localidad_fk, domicilio, activo, alta)
+        VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())`
+        , [cliente.nombre, cliente.razon_social, cliente.email, cliente.cuit, cliente.telefono, cliente.dni, 1, cliente.localidad, cliente.direccion, cliente.activo]
     )
 }
 
@@ -43,3 +42,10 @@ exports.getClienteById = async (id) => {
         LEFT JOIN provincias p on l.id_provincia_fk = p.id
         WHERE c.id = ?`, [id]);
 }
+
+exports.checkExist = async ({dni = null, email = null, cuit = null} = {}) => {
+    let params = [dni, email, cuit];
+    let query = "SELECT * FROM clientes WHERE ( dni = ? OR email = ? OR cuit = ? );"
+
+    return queryMYSQL(query, params);
+};

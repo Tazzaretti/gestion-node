@@ -29,7 +29,7 @@ content %}
 
       <div class="form-inline">
         <label for="">Localidades</label>
-        <select id="filtroLoc" class="form-control">
+        <select id="cmbFiltroLoc" class="form-control">
           <option value="t">Todas</option>
         </select>
       </div>
@@ -148,7 +148,7 @@ content %}
         <form>
           <div class="form-row">
             <div class="form-group col-12 col-lg-4">
-              <label for="txtNombre">Nombre:</label>
+              <label for="txtNombre">Nombre</label>
               <input
                 type="text"
                 class="form-control"
@@ -158,7 +158,7 @@ content %}
               />
             </div>
             <div class="form-group col-12 col-lg-4">
-              <label for="txtRsocial">Razón Social:</label>
+              <label for="txtRsocial">Razón Social</label>
               <input
                 type="text"
                 class="form-control"
@@ -168,7 +168,7 @@ content %}
               />
             </div>
             <div class="form-group col-12 col-lg-4">
-              <label for="txtEmail">Email:</label>
+              <label for="txtEmail">Email</label>
               <input
                 type="text"
                 class="form-control"
@@ -180,7 +180,7 @@ content %}
           </div>
           <div class="form-row">
             <div class="form-group col-12 col-lg-4">
-              <label for="txtCuit">CUIT:</label>
+              <label for="txtCuit">CUIT</label>
               <input
                 type="text"
                 class="form-control"
@@ -190,7 +190,7 @@ content %}
               />
             </div>
             <div class="form-group col-12 col-lg-4">
-              <label for="txtTelefono">Teléfono:</label>
+              <label for="txtTelefono">Teléfono</label>
               <input
                 type="text"
                 class="form-control"
@@ -200,7 +200,7 @@ content %}
               />
             </div>
             <div class="form-group col-12 col-lg-4">
-              <label for="txtDni">DNI:</label>
+              <label for="txtDni">DNI</label>
               <input
                 type="text"
                 class="form-control"
@@ -212,7 +212,7 @@ content %}
           </div>
           <div class="form-row">
             <div class="form-grup col-12 col-lg-4">
-              <label for="cmbProvincia">Provincia:</label>
+              <label for="cmbProvincia">Provincia</label>
               <select id="cmbProvincia" class="form-control" onchange="ObtenerLocalidades(this.value)">
                 <option value="" selected disabled> Seleccione una opción...</option>
                 {% for p in provincias %}
@@ -221,13 +221,13 @@ content %}
               </select>
             </div>
             <div class="form-grup col-12 col-lg-4">
-              <label for="cmbLocalidad">Localidad:</label>
+              <label for="cmbLocalidad">Localidad</label>
               <select id="cmbLocalidad" class="form-control selectpicker" disabled>
                 <option value="" selected disabled>Seleccione una opción...</option>
               </select>
             </div>
             <div class="form-group col-12 col-lg-4">
-              <label for="txtDireccion">Dirección:</label>
+              <label for="txtDireccion">Dirección</label>
               <input
                 type="text"
                 class="form-control"
@@ -236,10 +236,21 @@ content %}
                 autocomplete="off"
               />
             </div>
+            <div class="form-row">
+              <div class="form-group col-12 col-lg-4">
+                <label for="cmbIva">Condición IVA</label>
+                <select id="cmbIva" class="form-control selectpicker" autocomplete="off">
+                  <option value="">Seleccione una opción...</option>
+                </select>
+              </div>
+            </div>
           </div>
         </form>
       </div>
       <div class="modal-footer">
+        <button type="button" class="btn btn-success" onclick="Guardar()">
+          Guardar
+        </button>
         <button type="button" class="btn btn-primary" data-dismiss="modal">
           Close
         </button>
@@ -260,10 +271,11 @@ content %}
     _accion = "a";
     Limpiar();
     $("#modalTitle").text("Alta de Cliente");
+    CargarCMB();
     $("#modalAyM").modal("show");
   };
 
-  const Guardar = async (id = null) => {
+  const Guardar = async () => {
     const data = {
       nombre: $("#txtNombre").val(),
       razon_social: $("#txtRsocial").val(),
@@ -274,18 +286,25 @@ content %}
       provincia: $("#cmbProvincia").val(),
       localidad: $("#cmbLocalidad").val(),
       direccion: $("#txtDireccion").val(),
+      activo: 1
     };
 
-    let res = "";
-
+    let res = null;
+    $("#preloaderAPP").show();
     if (_accion == "m") {
-      res = await $.ajax({
-        url: `/clientes/modificar/${id}`,
-        type: "POST",
-        data: data,
-      });
-    };
+      res = await $.post(`/clientes/modificar/${id}`, {...data, id: _id});
+    } else {
+      console.log(data)
+      res = await $.post(`/clientes/alta`, data);
+    }
+    $("#preloaderAPP").hide();
+
+    console.log(res)
+
+
   };
+
+
   const Limpiar = () => {
     $("#modalTitle").val("");
     $("#txtNombre").val("");
@@ -317,7 +336,11 @@ content %}
     });
   };
 
-
+  CargarCMB = async () => {
+    const iva = await $.get('/condiciones_iva');
+    console.log(iva);
+    UpdateCmb("id", "descripcion", iva, "cmbIva");
+  }
 
   const Ver = async (id) => {
     $("#preloaderAPP").show();

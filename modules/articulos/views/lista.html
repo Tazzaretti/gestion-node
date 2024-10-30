@@ -1,0 +1,72 @@
+{% extends "../../template.html" %} 
+
+{% block styles %} 
+{% endblock %}
+
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="m-3">{{ pagename }}</h2>
+    </div>
+    <div class="col-md-12">
+        
+    </div>
+    <div class="col-md-12 m-3">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Articulo</th>
+                    <th>Precio unitario</th>
+                    <th>Rubro</th>
+                    <th>IVA</th>
+                    <th>Activo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Cubiertas 120/70</td>
+                    <td>$200</td>
+                    <td>Cubiertas</td>
+                    <td>21%</td>
+                    <td>Si</td>
+                </tr>
+                <tr>
+                    <td>Cubiertas 120/70</td>
+                    <td>$200</td>
+                    <td>Cubiertas</td>
+                    <td>21%</td>
+                    <td>Si</td>
+                </tr>
+                <tr>
+                    <td>Cubiertas 120/70</td>
+                    <td>$200</td>
+                    <td>Cubiertas</td>
+                    <td>21%</td>
+                    <td>Si</td>
+                </tr>
+                <tr>
+                    <td>Cubiertas 120/70</td>
+                    <td>$200</td>
+                    <td>Cubiertas</td>
+                    <td>21%</td>
+                    <td>Si</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(() => {
+        getById(1);
+    })
+    
+    const getById = async (id) => {
+        let art = await $.getJSON(`/articulos/${id}`)
+        console.log(art);
+    };
+</script>
+{% endblock %}
